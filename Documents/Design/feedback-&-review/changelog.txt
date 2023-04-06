@@ -1,0 +1,15 @@
+Changelog
+
+
+    Add color to the 'sign up' button to make it stand out for a new user, potentially make it larger than the adjascent button.
+    Make the header design consistent across all pages. Fill to top of page looks better.
+    Add account information to the 'my account' button on moobile to improve visability of being logged in. Maybe user name or abbreviation.
+    Make the menu buttons consistent between pages.
+
+    Implementation of Google Calandar API
+    Implementation of GitHub API
+
+    SQL design and implementation
+    Created routes funtions referencing database for main features
+
+    

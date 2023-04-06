@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <title>Combined Calendars</title>
+        <link rel="icon" type="image/x-icon" href="images/logo.png">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <!-- Vuetify and Material Design -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+
+
+        <!-- Polyfills to support older browsers -->
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin="anonymous"></script>
+
+        <!-- Bootstrap and BootstrapVue CSS -->
+        <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+        <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+
+        <!-- Vue, Vuetify and Bootstrap Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+        <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+        <!-- Vue Calendar -->
+        <script src="https://unpkg.com/vue-cal"></script>
+        <link href="https://unpkg.com/vue-cal/dist/vuecal.css" rel="stylesheet">
+
+        <!-- BootstrapVueIcons support -->
+        <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+
+        <!-- Custom js -->
+        <script src="/javascripts/all.js" defer></script>
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+    </head>
+    <body>
+        <div id="app"> <!--entire webpage start-->
+            <div> <!--header start-->
+                <header>
+                  <div>
+                    <nav>
+                      <div class="HeaderButtons" v-show="!log">
+                        <v-btn id="LoginButton" text type="button" v-on:click="CurrentPage = PageArray[2]"> LogIn </v-btn>
+                        <v-btn id="SignUpButton" rounded type="button" v-on:click="CurrentPage = PageArray[1]"> Sign up </v-btn>
+                      </div>
+                      <div class="HeaderButtons" v-show="log">
+                        <v-btn id="MyAccountButton" text type="button" v-on:click="ToMyAccount" >My Account</v-btn>
+                        <v-btn id="LogOutButton" text type="button" v-on:click="validateLogout">Log out</v-btn>
+                      </div>
+                    </nav>
+                    <h1 v-on:click="CurrentPage = PageArray[0]"><span>C</span>ombined <span>C</span>alendars</h1>
+                  </div>
+                  <v-tabs id="PageMenu" grow optional v-model="CurrentPage.index" color="#E15A97" background-color="#030303" dark>
+                    <v-tab v-on:click="CurrentPage = PageArray[0]" class="PageMenuItems">Home</v-tab>
+                    <v-tab v-on:click="CurrentPage = PageArray[5]" class="PageMenuItems">Create Event</v-tab>
+                    <v-tab v-on:click="ViewAndCreateEvents" class="PageMenuItems">View Events</v-tab>
+                    <!--<v-tab v-on:click="CurrentPage = PageArray[7]" class="PageMenuItems">Calendar</v-tab> -->
+                    <v-tab v-on:click="CurrentPage = PageArray[6]" v-if="admin && log" class="PageMenuItems">Admin</v-tab>
+                  </v-tabs>
+                </header>
+            </div> <!--header end-->
+
+          <div id="body"> <!--middle section of page-->
+
+            <!--main page not logged in start-->
+            <div v-if="CurrentPage.num === 1 && !log">
+              <!-- <v-btn type="button" v-on:click="log = true">log force</v-btn> -->
+                <p id="welcome">Welcome to Combined Calendars the premier event creating website!</p>
+                <img src="/images/logo.png" id="logo"/>
+                <div id="featurelist">
+                  <strong>Features:</strong>
+                  <ul>
+                    <li>Create your own event</li>
+                    <li>View all events you are a part of</li>
+                    <li>Check your linked calander to find times for events</li>
+                    <li>Create an event link to share with all invited</li>
+                  </ul>
+                </div>
+                <br />
+                <strong>Just log in to unlock all the event creating features this website has to offer!</strong>
+
+                <!-- functino to add shake
+                  <div :class="{ error: Shake }">
+                  <button v-on:click="ChangeShake">Click me</button>
+
+                </div> -->
+
+            </div> <!--main page not logged in end-->
+
+
+            <!--main logged in start-->
+            <div v-if="CurrentPage.num === 1 && log">
+              <p>This is main page logged in</p>
+              <v-btn type="button" v-on:click="admin = true;FirstName='tree';LastName='cap';">admin</v-btn>
+              <v-btn type="button" v-on:click="admin = false;">log out admin</v-btn>
+
+
+              <p>Your next event: </p>
+              <div v-if="MyEvents.length > 0">
+              <v-container class="EventBox">
+                <p><b>Title: </b>{{MyEvents[0].Title}} <b>Description: </b>{{MyEvents[0].Description}} </p>
+                <p> <b>Address: </b>{{MyEvents[0].StreetNumber}} {{MyEvents[0].Street}}, {{MyEvents[0].Suburb}}, {{MyEvents[0].Postcode}}, {{MyEvents[0].State}}, {{MyEvents[0].Country}}</p>
+                <p><b>Date: </b> <span v-for="j in MyEvents[0].SelectedEventDates">{{j}},  </span> <b>Start: </b> {{MyEvents[0].StartTime}} <b>End: </b>{{MyEvents[0].EndTime}}</p>
+              </v-container>
+            </div>
+            <div v-if="MyEvents.length == 0">
+              <b>You're next event is displayed here</b>
+            </div>
+            </div> <!--main logged in page end-->
+
+
+
+
+            <!--sign up page start-->
+            <div v-if="CurrentPage.num === 2">
+              <v-container class="BigBox">
+                <h2>Signup</h2>
+                <hr />
+                  <v-form v-model="valid">
+                    <v-row>
+                      <v-col>
+                        <v-row>
+                          <v-col cols="4"><v-text-field  v-model="User.FirstName" :rules="NameRules" label="First Name" placeholder="Danny" required></v-text-field></v-col>
+                          <v-col cols="4"><v-text-field  v-model="User.MiddleName" label="Middle Name" placeholder="Michael"></v-text-field></v-col>
+                          <v-col cols="4"><v-text-field  v-model="User.LastName" :rules="NameRules" label="Last Name" placeholder="DeVito" required></v-text-field></v-col>
+
+                          <v-col cols="6"><v-text-field  v-model="User.Email" :rules="EmailRules" label="Email" placeholder="example@example.com" required></v-text-field></v-col>
+                          <v-col cols="6"><v-text-field  v-model="User.Phone" :rules="PhoneRules" label="Phone Number" placeholder="9162 255 887" required></v-text-field></v-col>
+
+                          <v-col cols="4"><v-text-field  v-model="User.Username" :rules="UsernameRules" label="Username" placeholder="EventPlanner1" onblur="checkUser(b.User.Username)" required></v-text-field></v-col>
+                          <v-col cols="4"><v-text-field  v-model="User.Password" :rules="PasswordRules" label="Password" type="password"></v-text-field></v-col>
+                          <v-col cols="4"><v-text-field  v-model="ConPassword" :rules="PasswordRules" label="Confirm Password" type="password"></v-text-field></v-col>
+
+                          </v-col>
+                        </v-row>
+                      </v-col>
+                    </v-row>
+                  </v-form>
+                  <p v-bind:class="{'UsernameMsgNo': !UsernameUsed, 'UsernameMsgYes':UsernameUsed}">{{UsernameValid}}</p>
+                  <div>
+                  <pre class="ErrMsg">{{ErrorMsgSignup}}</pre>
+                  </div>
+                  <v-btn type="button" v-on:click="validateSignup">Signup</v-btn>
+
+                </v-container>
+
+            </div> <!--sign up page end-->
+
+
+
+
+            <!--login page start-->
+            <div v-if="CurrentPage.num === 3">
+              <v-container class="SmallBox">
+              <h2>LOGIN</h2>
+              <hr />
+                <v-form v-model="valid">
+                  <v-row>
+                    <v-col cols=12>
+                      <v-text-field prepend-icon="mdi-account" v-model="User.Username" :rules="UsernameRules" label="Username" required></v-text-field>
+                      <v-text-field prepend-icon="mdi-lock" v-model="User.Password" :rules="PasswordRules" label="Password" type="password" required></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-form>
+                <div>
+                <i class="ErrMsg">{{ErrorMsgLogin}}</i>
+                </div>
+                <v-btn type="button"  @click="validateLogin">login</v-btn>
+                <br /><br />
+                <v-btn type="button" href="/githubsignin"><i class="fa fa-github"></i> login via GitHub</v-btn>
+
+              </v-container>
+            </div> <!--login page end-->
+
+
+
+
+            <!--My account page start-->
+            <div v-if="CurrentPage.num === 4">
+                <v-container v-show="!EditAcc" class="SmallBox">
+                  <h2>My account</h2>
+                  <hr />
+                  <p>Name: {{User.FirstName}} {{User.MiddleName}} {{User.LastName}}</p>
+                  <p>Username: {{User.Username}}</p>
+                  <p>Email: {{User.Email}}</p>
+                  <p>Phone Number: {{User.Phone}}</p>
+
+                  <v-btn type="button" v-on:click="EditAcc = true;">edit account</v-btn>
+                  <v-btn id="authorize_button" onclick="handleAuthClick()"><i class="fa fa-google"></i> Connect Google Calendars</v-btn>
+                </v-container>
+                <v-container v-show="EditAcc" class="BigBox">
+                  <h2>My account</h2>
+                  <hr />
+                  <v-form v-model="valid">
+                    <v-row>
+                      <v-col>
+                        <v-row>
+                          <v-col cols="4"><v-text-field  v-model="User.FirstName" :rules="NameRules" label="First Name" placeholder="Danny" required></v-text-field></v-col>
+                          <v-col cols="4"><v-text-field  v-model="User.MiddleName" :rules="NameRules" label="Middle Name" placeholder="Michael" required></v-text-field></v-col>
+                          <v-col cols="4"><v-text-field  v-model="User.LastName" :rules="NameRules" label="Last Name" placeholder="DeVito" required></v-text-field></v-col>
+
+                          <v-col cols="6"><v-text-field  v-model="User.Email" :rules="EmailRules" label="Email" placeholder="example@example.com" required></v-text-field></v-col>
+                          <v-col cols="6"><v-text-field  v-model="User.Phone" :rules="PhoneRules" label="Phone Number" placeholder="9162 255 887" required></v-text-field></v-col>
+
+                          <v-col cols="4"><v-text-field  v-model="User.Username" :rules="UsernameRules" label="Username" placeholder="EventPlanner1" required></v-text-field></v-col>
+                          <v-col cols="4"><v-text-field  v-model="User.Password" :rules="PasswordRules" label="Password" type="password"></v-text-field></v-col>
+                          <v-col cols="4"><v-text-field  v-model="ConPassword" :rules="PasswordRules" label="Confirm Password" type="password"></v-text-field></v-col>
+
+                          </v-col>
+                        </v-row>
+                      </v-col>
+                    </v-row>
+                  </v-form>
+                  <div>
+                    <pre class="ErrMsg">{{ErrorMsgSignup}}</pre>
+                    </div>
+                  <v-btn type="button" v-on:click="validateSignup">Confirm</v-btn>
+                </v-container>
+
+              </div>
+
+            </div> <!--this is the myaccount page end-->
+
+
+
+
+            <!--view events page logged in start-->
+            <div v-if="CurrentPage.num === 5 && log">
+              <h2 v-show="MyEvents.length == 0">This page will show your events</h2>
+              <h2 v-show="MyEvents.length > 0">Your events:</h2>
+                <div v-for="i in MyEvents">
+                  <v-container class="EventBox">
+                    <p><b>Title: </b>{{i.Title}} <b>Description: </b>{{i.Description}} </p>
+                    <p> <b>Address: </b>{{i.StreetNumber}} {{i.Street}}, {{i.Suburb}}, {{i.Postcode}}, {{i.State}}, {{i.Country}}</p>
+                    <p><b>Date: </b> <span v-for="j in i.SelectedEventDates">{{j}},  </span> <b>Start: </b> {{i.StartTime}} <b>End: </b>{{i.EndTime}}</p>
+                  </v-container>
+                </div>
+            </div> <!--view events page logged in end-->
+
+
+            <!--view events page not logged in start-->
+            <div class="NotLog" v-if="CurrentPage.num === 5 && !log">
+              <h2>Please Log in to view your events</h2>
+            </div> <!--view events page not logged in end-->
+
+
+
+
+            <!--create events page start-->
+            <div v-if="CurrentPage.num === 6 && log" id="createEventsPage">
+              <v-form v-model="EventValid">
+                <v-row>
+                  <v-col class="col-5" px-4 pt-4>
+                    <v-date-picker
+                      dark
+                      multiple
+                      v-model = "Event.SelectedEventDates"
+                      :min = "TodaysDate"
+                      max = "2025-01-01"
+                      required
+                      class="EventDatepicker"
+                      calendar-class="EventDatepickerCalendar"
+                      width="window.innerWidth"
+                    ></v-date-picker>
+                  </v-col>
+                  <v-col class="col-7">
+                    <v-row>
+                      <v-col class="col-6">
+                        <v-text-field v-model="Event.Title" :rules="EventRules.Title" label="Event title" required></v-text-field>
+                      </v-col>
+                      <v-col class="col-6">
+                        <v-text-field v-model="Event.Description" :rules="EventRules.Description" label="Event description" required></v-text-field>
+                      </v-col>
+                      <v-col class="col-6">
+                        <v-text-field v-model="Event.StreetNumber" :rules="EventRules.StreetNumber" label="Street number" required></v-text-field>
+                      </v-col>
+                      <v-col class="col-6">
+                        <v-text-field v-model="Event.Street" :rules="EventRules.Street" label="Street" required></v-text-field>
+                      </v-col>
+                      <v-col class="col-6">
+                        <v-text-field v-model="Event.Suburb" :rules="EventRules.Suburb" label="Suburb" required></v-text-field>
+                      </v-col>
+                      <v-col class="col-6">
+                        <v-text-field v-model="Event.Postcode" :rules="EventRules.Postcode" label="Postcode" required></v-text-field>
+                      </v-col>
+                      <v-col class="col-6">
+                        <v-text-field v-model="Event.State" :rules="EventRules.State" label="State" required></v-text-field>
+                      </v-col>
+                      <v-col class="col-6">
+                        <v-text-field v-model="Event.Country" :rules="EventRules.Country" label="Country" required></v-text-field>
+                      </v-col>
+                      <v-col class="col-6">
+                        <p>Guest List</p>
+                      </v-col>
+                      <v-col class="col-6" v-if="!multipleDatesSelected">
+                        <p>Start Time</p>
+                        <input type="time" id="StartTime" name="StartTime" v-model="Event.StartTime">
+                      </v-col>
+                      <v-col class="col-6" v-if="!multipleDatesSelected">
+                        <p>End Time</p>
+                        <input type="time" id="EndTime" name="EndTime" :min="Event.StartTime" v-model="Event.EndTime">
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                </v-row>
+              </v-form>
+              <br />
+              <div>
+                <pre class="ErrMsg">{{ErrorMsgEvents}}</pre>
+              </div>
+              <v-btn block type="button" v-b-modal.create-event-modal>Create Event</v-btn>
+              <b-modal id="create-event-modal" title="Confirm Event" @ok="ValidateEvent">
+                <v-container class="EventBox">
+                  <p><b>Title: </b>{{Event.Title}} <b>    Description: </b>{{Event.Description}} </p>
+                  <p> <b>Address: </b>{{Event.StreetNumber}} {{Event.Street}}, {{Event.Suburb}}, {{Event.Postcode}}, {{Event.State}}, {{Event.Country}}</p>
+                  <p> <b>Date: </b> <span v-for="i in Event.SelectedEventDates">{{i}}, </span> <b> Start: </b> {{Event.StartTime}} <b>    End: </b>{{Event.EndTime}}</p>
+                </v-container>
+              </b-modal>
+
+            </div> <!--create events page end-->
+
+            <!--create events not logged in start-->
+            <div class="NotLog" v-if="CurrentPage.num === 6 && !log">
+              <h2>Please Log in to start creating events today!</h2>
+            </div> <!--create events page not logged in end-->
+
+
+
+
+            <!--admin page start-->
+            <div v-if="CurrentPage.num === 7">
+              <p>This page is for admins only</p>
+              <p>admin can see all users and events, can edit them and can delete</p>
+
+            </div> <!--admin page end-->
+
+
+
+
+
+            <!-- Calendar page start-->
+            <div v-show="CurrentPage.num === 8 && log" id="calendarPage">
+              <!-- GOOGLE CALENDAR API -->
+              <div>
+                <p>Google Calendar API</p>
+
+                <!--Add buttons to initiate auth sequence and sign out-->
+                <!-- <v-btn id="authorize_button" onclick="handleAuthClick()" style="visibility: visible;">Authorize</v-btn> -->
+                <v-btn id="signout_button" onclick="handleSignoutClick()">Sign Out</v-btn>
+
+                <div v-for="event in googleCalendarEvents">
+                  <p>{{ event.summary }}</p>
+                  <p>{{ event.start }}</p>
+                  <p>{{ event.end }}</p>
+                  <p>{{ event.eventType }}</p>
+                </div>
+              </div>
+              <br>
+              <hr />
+            </div> <!-- Calendar page end -->
+
+
+            <!--calendar not logged in start-->
+            <div class="NotLog" v-if="CurrentPage.num === 8 && !log">
+              <h2>Please Log in to use this feature</h2>
+            </div> <!--calendar not logged in end-->
+
+
+
+            </div> <!--middle section of the page-->
+
+            <div> <!--footer start-->
+
+                <footer><p>Created by GroupProject123</p></footer>
+
+            </div> <!--footer end-->
+
+        </div> <!--entire webpage end-->
+    </body>
+</html>
+
+<!-- Google Calendar API -->
+<script src="/javascripts/googleCalendarAPI.js"></script>
+<script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+<script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>

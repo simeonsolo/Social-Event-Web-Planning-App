@@ -1,0 +1,60 @@
+Feature Details
+
+    Initial design
+
+        All pages retain the basic design of the main page, utilising a familiar header and footer design, with updated buttons depending on what
+        page the user is on and what options are available to them at the time, depending on their log in status.
+
+        Users should be able to sign up and log in to the system in order to
+            Sign up/log in.
+                Sign up and Login are placed in the top right hand corner of the page in the header, where a user would expect to find these functions.
+                The buttons are rounded and can be clicked to navigate to either page respectively.
+                The log in page contains text box inputs for email and password, as well as the helpful 'Don't have an account? Sign up here' link.
+                The sign up page contains the text box inputs required for a new user.
+            Manage their user information.
+                Once logged in, users can access the 'My account' page in the top right, in order to edit their user information.
+                Next to the 'My Account' button is the 'Sign Out' in the top right of screen.
+            Create a new event.
+                The create new event page allows users to input a new event, the details for which are saved and input to the users calandar.
+            Generate a link for people without accounts.
+                The menu contains an option to 'send and invite' to a new user. Clicking this option allows the current user to generate a link that can be sent to a new user.
+                This link dirtects the new user to the 'Sign Up' page. Once signed up they will have the new event they were invited to added to their calandar.
+            Specify their availability for an event.
+                Events viewed on the calandar may be responded to with an availability option.
+            Link their calendar to automatically check their availability.
+                Availibility will be checked when responding to events that overlap with existing commitments. If a clash occurs, the user is prompted with a warning, but ultimately
+                the user may book multiple events to the same timeslot.
+            See times when everyone is available for an event.
+                Invitees availability is automatically diplayed when selecting them for an event, so the user can choose to move the time or resolve the time clash.
+            Confirm/finalise an event time.
+                Confirmation is required when adding an event, or responding to an event. This is done in the form of a simply pop-up window to confirm.
+            Add the finalised event to their calendar.
+                The finiliised event will automatically appear on the users calandar after either creating the event, or responding. Even 'not attending' responses to events will be
+                shown on the users calandar, with a diffrent display setting. They may change their response or remove the event entirely.
+
+        System Admins should be able to log in in order to:
+            Manage their user information.
+            Manage Users.
+            Manage Events.
+            Sign-up other Admins.
+                When logged in as an admin, the menu will contain a dedicated admin page. This page will include these feature.
+                Admins will be able to navigate to the admin page, then select 'all of the above options'.
+                From here they may select a user, and can veiw appropriate events or information regarding that user. They can then
+                manage information, users, events or sign-up other admins.
+
+
+            Users should be able to choose to link a social media/email/other account, allowing login via that platform, to make logging in easier.
+                This option will appear on the log in page.
+            Users without accounts should be able to specify their availability for an event provided by a custom link.
+                addressed above
+
+Accessibility
+    The following features will be added to the site to improve accessibility and usability for all users
+        Set language in the html file as to improve text-to-speech features and search results
+        Set all images used to include alternate image text
+        The site will be designed for, and tested to be able to use just the keyboard to navigate
+        There is currently no plan to include audio on the site but in the case that audio is added, a visual transcript will also be added
+        The use of color will not be the only visual means of conveying information
+        There will be no background audio
+        There will be nothing on any page that flashes more than three times in any one second period
+        Meaningful headings and labels will be included for all navigation purposes

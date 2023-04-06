@@ -1,0 +1,8 @@
+// To Do
+  - Connect GitHub to db and Account Settings
+  - Connect Google Calendar Events to db
+  - Setup emails
+
+// Current Bugs
+  - Fix callbackUrl in Passport (Jesse)
+  

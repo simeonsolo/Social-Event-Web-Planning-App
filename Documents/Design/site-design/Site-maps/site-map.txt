@@ -1,0 +1,5 @@
+Site map
+    The site map shows how the user will be able to navigate the website.
+    The arrows represent 'clicks' or actions from the user.
+    Each arrow represents a transition between pages.
+    Users may navigate from one page to another, using the header, without  having to first return home.

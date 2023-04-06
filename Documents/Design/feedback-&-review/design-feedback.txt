@@ -1,0 +1,18 @@
+Design Feedback
+
+    Review 1
+        Layout makes sense, the buttons are where I expect them
+        some diffrences in buttons could be benificial to distinguish options from one another
+        It's not immediately obvious when i'm logged in vs when i'm not
+
+    Review 2
+        Header is not consistent between main and other pages
+        header button design changes between pages
+        looks good visually
+        love the logo
+
+    Changes to implement as a result of the review.
+        Add color to the 'sign up' button to make it stand out for a new user, potentially make it larger than the adjascent button.
+        Make the header design consistent across all pages. Fill to top of page looks better.
+        Add account information to the 'my account' button to improve visability of being logged in. Maybe user name or abbreviation.
+        Make the menu buttons consistent between pages.
